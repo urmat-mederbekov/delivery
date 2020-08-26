@@ -27,7 +27,7 @@ public class User {
 
     @Column
     @Builder.Default
-    private boolean enabled = true;
+    private Boolean enabled = true;
 
     @Column
     @Builder.Default

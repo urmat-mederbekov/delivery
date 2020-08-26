@@ -1,5 +1,6 @@
 package kg.attractor.demo.config;
 
+import kg.attractor.demo.service.MyUserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,13 +10,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.sql.DataSource;
-
 @Configuration
 @AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final DataSource dataSource;
+    private final MyUserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder encoder() {
@@ -56,17 +55,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-        String fetchAdminsQuery = "select email, password, enabled"
-                + " from users"
-                + " where email = ?";
-
-        String fetchRolesQuery = "select email, role" +
-                " from users" +
-                " where email = ?";
-
-        auth.jdbcAuthentication()
-                .usersByUsernameQuery(fetchAdminsQuery)
-                .authoritiesByUsernameQuery(fetchRolesQuery)
-                .dataSource(dataSource);
+        auth.userDetailsService(userDetailsService);
     }
 }
