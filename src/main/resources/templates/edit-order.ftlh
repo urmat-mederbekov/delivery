@@ -4,38 +4,36 @@
     <#if _csrf??>
         <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
     </#if>
+    <#if errors??>
+        <#assign fieldNames = errors?map(fieldError -> fieldError.field)>
+    </#if>
+    <h3 class="text-center">Редактировать заказ</h3>
     <div class="form-group">
         <label class="col-form-label">Товар</label>
-        <input class="form-control" type="text" name="good" value="${order.good}" placeholder="Товар" autofocus>
-        <#if errors??>
-            <#list errors as fieldError>
-                <#if fieldError.field == 'good'>
-                    <div class="alert alert-warning mt-1" role="alert">${fieldError.defaultMessage!'-- no message --'}</div>
-                </#if>
-            </#list>
+        <#assign fieldName = "good">
+        <#assign input ='<input class="form-control" type="text" name="good" value="${order.good}" placeholder="Товар" autofocus>'>
+        <#if errors?? && !fieldNames?seq_contains(fieldName)>
+            <#assign inputWithValue = '<input class="form-control" type="text" name="good" value="${orderForm.good}" placeholder="Товар" autofocus>'>
         </#if>
+        <#include "partials/inputErrors.ftlh">
     </div>
     <div class="form-group">
         <label class="col-form-label">Адрес</label>
-        <input class="form-control" type="text" name="destination" value="${order.destination}" placeholder="Адрес">
-        <#if errors??>
-            <#list errors as fieldError>
-                <#if fieldError.field == 'destination'>
-                    <div class="alert alert-warning mt-1" role="alert">${fieldError.defaultMessage!'-- no message --'}</div>
-                </#if>
-            </#list>
+        <#assign fieldName = "destination">
+        <#assign input ='<input class="form-control" type="text" name="destination" value="${order.destination}" placeholder="Адрес">'>
+        <#if errors?? && !fieldNames?seq_contains(fieldName)>
+            <#assign inputWithValue = '<input class="form-control" type="text" name="destination" value="${orderForm.destination}" placeholder="Адрес">'>
         </#if>
+        <#include "partials/inputErrors.ftlh">
     </div>
     <div class="form-group">
         <label class="col-form-label">Ко скольки</label>
-        <input class="form-control" type="datetime-local" name="orderedTo"  value="${order.orderedTo}" placeholder="Ко скольки">
-        <#if errors??>
-            <#list errors as fieldError>
-                <#if fieldError.field == 'orderedTo'>
-                    <div class="alert alert-warning mt-1" role="alert">${fieldError.defaultMessage!'-- no message --'}</div>
-                </#if>
-            </#list>
+        <#assign fieldName = "orderedTo">
+        <#assign input ='<input class="form-control" type="datetime-local" name="orderedTo"  value="${order.orderedTo}" placeholder="Ко скольки">'>
+        <#if errors?? && !fieldNames?seq_contains(fieldName)>
+            <#assign inputWithValue = '<input class="form-control" type="datetime-local" name="orderedTo" value="${orderForm.orderedTo}" placeholder="Ко скольки">'>
         </#if>
+        <#include "partials/inputErrors.ftlh">
     </div>
     <div class="form-group">
         <label class="col-form-label">Курьер</label>

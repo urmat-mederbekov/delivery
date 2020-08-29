@@ -33,16 +33,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
                 .clearAuthentication(true)
-                .invalidateHttpSession(true);
+                .invalidateHttpSession(true)
+                .and().exceptionHandling().accessDeniedPage("/accessdenied");;
 
         http.authorizeRequests()
 
                 .antMatchers("/orders", "/orders/add-order","/orders/{id}/edit",
-                        "/orders/{id}/delete", "/users", "/users/add-user", "/orders/assign-courier")
+                        "/orders/{id}/delete", "/users", "/users/add-user", "/orders/assign-courier",
+                        "users/{id}/edit", "/orders/search")
                 .hasAnyRole("ADMIN")
                 .antMatchers("users/{id}/orders", "/orders/{id}", "/orders/{id}/state")
                 .hasAnyRole("ADMIN", "USER")
-                .antMatchers("/orders/{id}/state")
+                .antMatchers("/orders/{id}/state", "/{id}/orders/search")
                 .hasRole("USER");
 
         http.authorizeRequests()

@@ -1,6 +1,6 @@
 <#import "partials/main.ftlh" as main>
 <@main.renderWith>
-    <form action="/users/${user.id?c}/orders/search">
+    <form action="/users/${courier.id?c}/orders/search">
         <#if _csrf??>
             <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
         </#if>
@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col">${order?counter}</div>
                 <div class="col">${order.destination}</div>
-                <div class="col">${order.orderedTo}</div>
+                <div class="col">${order.orderedTo.toLocalDate()} ${order.orderedTo.toLocalTime()}</div>
                 <#if order.state == "COMPLETED">
                     <div class="col bg-success">Доставлен</div>
                 <#elseif order.state == "NOT_COMPLETED">

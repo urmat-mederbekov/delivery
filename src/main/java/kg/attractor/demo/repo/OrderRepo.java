@@ -8,9 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrderRepo extends JpaRepository<Order, Long> {
 
-    Page<Order> getAllByUserEmail(Pageable pageable, String email);
+    Page<Order> getAllByUserId(Pageable pageable, Long id);
 
     Page<Order> getAllByGoodContainsIgnoreCaseOrDestinationContainsIgnoreCaseOrUserNameContainsIgnoreCase(String good, String destination, String user_name, Pageable pageable);
-
-    Page<Order> getAllByUserEmailAndGoodContainsIgnoreCaseOrDestinationContainsIgnoreCaseOrUserNameContainsIgnoreCase(String user_email, String good, String destination, String user_name, Pageable pageable);
 }

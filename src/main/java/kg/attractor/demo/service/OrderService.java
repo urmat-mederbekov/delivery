@@ -1,12 +1,15 @@
 package kg.attractor.demo.service;
 
 import kg.attractor.demo.dto.OrderDTO;
+import kg.attractor.demo.exception.ResourceNotFoundException;
 import kg.attractor.demo.form.OrderForm;
 import kg.attractor.demo.model.Order;
+import kg.attractor.demo.model.User;
 import kg.attractor.demo.repo.OrderRepo;
 import kg.attractor.demo.repo.UserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -31,14 +34,15 @@ public class OrderService {
     }
 
     public void assignCourier(Long orderId, Long userId){
-        Order order = orderRepo.findById(orderId).get();
-        order.setUser(userRepo.findById(userId).get());
+        Order order = orderRepo.findById(orderId).orElseThrow(ResourceNotFoundException::new);
+        order.setUser(userRepo.findById(userId).orElseThrow(ResourceNotFoundException::new));
 
         orderRepo.save(order);
     }
 
-    public Page<OrderDTO> getAllByUser(Pageable pageable, Principal principal){
-        return orderRepo.getAllByUserEmail(pageable, principal.getName()).map(OrderDTO::from);
+    public Page<OrderDTO> getAllByUserId(Pageable pageable,Long id){
+        User user = userRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
+        return orderRepo.getAllByUserId(pageable, user.getId()).map(OrderDTO::from);
     }
 
     public Page<OrderDTO> getAll(Pageable pageable){
@@ -50,26 +54,28 @@ public class OrderService {
     }
 
     public Page<OrderDTO> searchByUser(Principal principal, String query, Pageable pageable){
-        return orderRepo.getAllByUserEmailAndGoodContainsIgnoreCaseOrDestinationContainsIgnoreCaseOrUserNameContainsIgnoreCase(principal.getName(), query, query, query, pageable).map(OrderDTO::from);
+        Page<Order> orders = orderRepo.getAllByGoodContainsIgnoreCaseOrDestinationContainsIgnoreCaseOrUserNameContainsIgnoreCase(query, query,query, pageable);
+        orders = new PageImpl<>(orders.filter(order -> order.getUser().getEmail().equals(principal.getName())).toList());
+        return orders.map(OrderDTO::from);
     }
 
     public OrderDTO getOrderById(Long id){
-        return OrderDTO.from(orderRepo.findById(id).get());
+        return OrderDTO.from(orderRepo.findById(id).orElseThrow(ResourceNotFoundException::new));
     }
 
     public void editOrderById(Long id, OrderForm orderForm){
-        Order order = orderRepo.findById(id).get();
+        Order order = orderRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
 
         order.setGood(orderForm.getGood());
         order.setDestination(orderForm.getDestination());
         order.setOrderedTo(orderForm.getOrderedTo());
-        order.setUser(userRepo.findById(orderForm.getUserId()).get());
+        order.setUser(userRepo.findById(orderForm.getUserId()).orElseThrow(ResourceNotFoundException::new));
 
         orderRepo.save(order);
     }
 
     public void changeOrderState(Long id){
-        Order order = orderRepo.findById(id).get();
+        Order order = orderRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
         order.setState(order.getState().changeState());
         orderRepo.save(order);
     }

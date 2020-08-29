@@ -1,42 +1,37 @@
 <#import "partials/main.ftlh" as main>
 <@main.renderWith>
-    <div class="mx-auto mt-3 w-50">
-        <form class="box-1" action="/users" method="post">
-            <#if _csrf??>
-                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
-            </#if>
-            <h3 class="text-center">Зарегистрироваться</h3>
-            <div class="form-group">
-                <input class="form-control" type="text" name="name" placeholder="Имя" autofocus>
-                <#if errors??>
-                    <#list errors as fieldError>
-                        <#if fieldError.field == 'name'>
-                            <div class="alert alert-warning mt-1" role="alert">${fieldError.defaultMessage!'-- no message --'}</div>
-                        </#if>
-                    </#list>
-                </#if>
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="text" name="password" placeholder="Пароль">
-                <#if errors??>
-                    <#list errors as fieldError>
-                        <#if fieldError.field == 'password'>
-                            <div class="alert alert-warning mt-1" role="alert">${fieldError.defaultMessage!'-- no message --'}</div>
-                        </#if>
-                    </#list>
-                </#if>
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="email" name="email" placeholder="Email">
-                <#if errors??>
-                    <#list errors as fieldError>
-                        <#if fieldError.field == 'email'>
-                            <div class="alert alert-warning mt-1" role="alert">${fieldError.defaultMessage!'-- no message --'}</div>
-                        </#if>
-                    </#list>
-                </#if>
-            </div>
-            <p><button type="submit" class="btn btn-primary w-100">Добавить</button></p>
-        </form>
+    <h3>Список курьеров</h3>
+
+    <div class="row">
+        <div class="col">Имя</div>
+        <div class="col">Email</div>
     </div>
+    <a href="/users/${user.id?c}/edit">
+        <div class="row">
+            <div class="col">${user.name}</div>
+            <div class="col">${user.email}</div>
+        </div>
+    </a>
+    <h3>Список заказов курьера</h3>
+    <div class="row">
+        <div class="col">#</div>
+        <div class="col">Адрес</div>
+        <div class="col">Ко Скольки</div>
+        <div class="col">Состояние</div>
+    </div>
+    <#list items as order>
+        <a href="/orders/${order.id?c}">
+            <div class="row">
+                <div class="col">${order?counter}</div>
+                <div class="col">${order.destination}</div>
+                <div class="col">${order.orderedTo}</div>
+                <#if order.state == "COMPLETED">
+                    <div class="col bg-success">Доставлен</div>
+                <#elseif order.state == "NOT_COMPLETED">
+                    <div class="col bg-warning">Не Доставлен</div>
+                </#if>
+            </div>
+        </a>
+    </#list>
+    <#include "partials/pagination.ftlh">
 </@main.renderWith>

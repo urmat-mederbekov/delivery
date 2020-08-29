@@ -24,6 +24,5 @@ public class OrderForm {
     @NotNull(message = "Обязательное поле")
     private LocalDateTime orderedTo;
 
-//    @NotNull(message = "Обязательное поле")
     private Long userId;
 }

@@ -8,12 +8,13 @@
         <div class="col">Email</div>
     </div>
     <#list items as user>
-        <a href="/users/${user.id?c}/orders"></a>
-        <div class="row">
-            <div class="col">${user?counter}</div>
-            <div class="col">${user.name}</div>
-            <div class="col">${user.email}</div>
-        </div>
+        <a href="/users/${user.id?c}">
+            <div class="row">
+                <div class="col">${user?counter}</div>
+                <div class="col">${user.name}</div>
+                <div class="col">${user.email}</div>
+            </div>
+        </a>
     </#list>
     <#include "partials/pagination.ftlh">
 </@main.renderWith>

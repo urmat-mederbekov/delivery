@@ -11,8 +11,8 @@
     <div class="row">
         <div class="col">${order.good}</div>
         <div class="col">${order.destination}</div>
-        <div class="col">${order.orderedAt}</div>
-        <div class="col">${order.orderedTo}</div>
+        <div class="col">${order.orderedAt.toLocalDate()} ${order.orderedAt.toLocalTime()}</div>
+        <div class="col">${order.orderedTo.toLocalDate()} ${order.orderedTo.toLocalTime()}</div>
         <#if order.state == "COMPLETED">
             <div class="col bg-success">Доставлен</div>
         <#elseif order.state == "NOT_COMPLETED">

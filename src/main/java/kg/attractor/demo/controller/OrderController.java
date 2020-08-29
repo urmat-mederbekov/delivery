@@ -52,7 +52,7 @@ public class OrderController {
 
             return "order";
         }else if (userService.existsByEmailAndRole(principal.getName(), Role.ROLE_USER)){
-            return "curier-order";
+            return "courier-order";
 
         }
         return "order";
@@ -71,6 +71,7 @@ public class OrderController {
 
         if (validationResult.hasFieldErrors()) {
             attributes.addFlashAttribute("errors", validationResult.getFieldErrors());
+            attributes.addFlashAttribute("orderForm", orderForm);
             return "redirect:/orders/add-order";
         }
 
@@ -118,6 +119,7 @@ public class OrderController {
 
         if (validationResult.hasFieldErrors()) {
             attributes.addFlashAttribute("errors", validationResult.getFieldErrors());
+            attributes.addFlashAttribute("orderForm", orderForm);
             return "redirect:/orders/{id}/edit";
         }
 
@@ -126,9 +128,10 @@ public class OrderController {
     }
 
     @GetMapping("/{id}/state")
-    public String editOrder(@PathVariable String id){
+    public String editOrder(@PathVariable String id, Principal principal){
 
+        Long userId = userService.getUserByEmail(principal.getName()).getId();
         orderService.changeOrderState(Long.parseLong(id));
-        return "redirect:/users/{id}/orders";
+        return "redirect:/users/" + userId + "/orders";
     }
 }
