@@ -1,5 +1,7 @@
 # delivery
 
+тз для delivery https://docs.google.com/document/d/12B63CkJ6UmgL8xdt8QqqkYvvjhwWffjUo0iZe-jGwAs/edit?usp=sharing
+
 ### При разрабобтке используется
 
 * java version "11"
